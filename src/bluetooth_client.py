@@ -15,48 +15,82 @@ class BluetoothChatClient:
         print("⏳ Please wait 10-15 seconds...")
         
         try:
-            # Check if running on Termux
-            is_termux = os.path.exists('/data/data/com.termux')
-            if is_termux:
-                print("🤖 Termux detected - scanning with optimized settings...")
-            
             devices = await BleakScanner.discover(timeout=15.0)
             
             if not devices:
                 print("❌ No Bluetooth devices found")
-                print("💡 Troubleshooting tips:")
-                print("   - Make sure target device is discoverable")
-                print("   - Enable Location Services (Android)")
-                print("   - Grant Bluetooth permission to Termux")
-                print("   - Try moving closer to target device")
+                print("💡 Troubleshooting checklist:")
+                print("   1. Enable Bluetooth on both devices")
+                print("   2. Make target device discoverable:")
+                print("      • macOS: System Preferences > Bluetooth > Advanced")
+                print("      • Windows: Settings > Devices > Bluetooth")
+                print("      • Linux: bluetoothctl discoverable on")
+                print("   3. Move devices closer (within 10 meters)")
+                print("   4. Try running: python detect_bluetooth.py")
                 return None
                 
             print(f"\n✅ Found {len(devices)} devices:")
-            valid_devices = []
+            print("━" * 60)
             
+            valid_devices = []
             for i, device in enumerate(devices):
                 device_name = device.name or "Unknown Device"
-                # Filter out empty or very short names that are likely not useful
-                if len(device_name.strip()) > 1:
-                    print(f"{len(valid_devices)+1}. {device_name} ({device.address})")
-                    valid_devices.append(device)
+                device_addr = device.address
+                
+                # Get signal strength if available
+                signal_info = ""
+                if hasattr(device, 'rssi'):
+                    signal_strength = device.rssi
+                    if signal_strength > -50:
+                        signal_info = " 📶 Strong"
+                    elif signal_strength > -70:
+                        signal_info = " 📶 Medium" 
+                    else:
+                        signal_info = " 📶 Weak"
+                
+                # Show device info clearly
+                print(f"{len(valid_devices)+1:2d}. {device_name}")
+                print(f"    🆔 Address: {device_addr}")
+                print(f"    📡 Type: Bluetooth LE{signal_info}")
+                
+                # Try to identify if it's likely a computer
+                if any(keyword in device_name.lower() for keyword in 
+                      ['macbook', 'imac', 'pc', 'laptop', 'desktop', 'computer']):
+                    print(f"    💻 Device Type: Computer (Good for chat)")
+                elif any(keyword in device_name.lower() for keyword in 
+                        ['phone', 'iphone', 'android', 'mobile']):
+                    print(f"    📱 Device Type: Mobile")
+                else:
+                    print(f"    ❓ Device Type: Unknown")
+                
+                print("    " + "─" * 50)
+                valid_devices.append(device)
                     
             if not valid_devices:
-                print("❌ No named devices found")
-                print("💡 Make sure target device (MacBook) is:")
-                print("   - Bluetooth enabled")
-                print("   - Set to discoverable/visible")
+                print("❌ No valid devices found")
                 return None
                 
+            print(f"\n💡 Tip: Look for devices marked as 'Computer' for chat servers")
+            print(f"🔍 Need help? Run: python detect_bluetooth.py")
+                
             return valid_devices
+            
         except Exception as e:
             print(f"❌ Error scanning devices: {e}")
+            
+            # Specific error handling
             if "Bluetooth device is turned off" in str(e):
-                print("💡 Please enable Bluetooth on this device")
+                print("💡 Solution: Enable Bluetooth on this device")
             elif "not authorized" in str(e).lower():
-                print("💡 Please grant Bluetooth permission to this app")
+                print("💡 Solution: Grant Bluetooth permissions to this application")
+            elif "no adapter" in str(e).lower():
+                print("💡 Solution: Check if Bluetooth adapter is connected")
             else:
-                print("💡 Try running with Location Services enabled")
+                print("💡 General solutions:")
+                print("   • Check Bluetooth is enabled")
+                print("   • Run as administrator/sudo if needed")
+                print("   • Try: python detect_bluetooth.py --status")
+                
             return None
             
     async def connect_to_device(self, device):

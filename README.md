@@ -70,29 +70,39 @@ python src/main.py client wifi
 # Masukkan IP server dan port (default: localhost:8888)
 ```
 
-### Mode 2: Bluetooth (Experimental)
+### Mode 2: Bluetooth (Universal)
 
-**⚠️ Pastikan Bluetooth aktif di kedua perangkat**
+**✅ Mendukung: macOS, Windows, Linux**
 
-#### 🔵 Termux Android ↔ MacBook:
-**MacBook (Server):**
+#### 🔍 Step 1: Identify Devices
+```bash
+# Cek device info Anda
+python detect_bluetooth.py --info
+
+# Scan devices yang tersedia  
+python detect_bluetooth.py --scan
+```
+
+#### � Step 2: Start Connection
+**Computer A (Server):**
 ```bash
 python src/main.py server bt
+# Output akan menampilkan device name & address
 ```
 
-**Termux Android (Client):**
+**Computer B (Client):**
 ```bash
-python src/termux_chat.py client bt
-# Pilih MacBook dari daftar scan
+python src/main.py client bt
+# Pilih device server dari daftar scan
 ```
 
-#### 🔧 Setup Requirements:
-- **Android:** Location Services ON, Bluetooth permission untuk Termux
-- **MacBook:** Bluetooth ON, set discoverable
-- **Jarak:** Dalam 10 meter
-- **Fallback:** Gunakan WiFi jika Bluetooth gagal
+#### 🔧 Troubleshooting:
+- **No devices found:** Make devices discoverable
+- **Connection failed:** Pair devices manually first  
+- **Permission error:** Grant Bluetooth permissions
+- **Still fails:** Use WiFi mode instead
 
-📖 **Panduan lengkap:** `STEP_BY_STEP_BLUETOOTH.md`
+📖 **Panduan lengkap:** `BLUETOOTH_CONNECTION_GUIDE.md`
 
 ## 📡 Koneksi Antar Perangkat Berbeda
 

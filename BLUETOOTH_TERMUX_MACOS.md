@@ -1,20 +1,218 @@
-# Bluetooth Connection: Termux Android ↔ MacBook
+# Universal Bluetooth Chat Guide
+# Support: macOS, Windows, Linux
 
-## 🔄 Koneksi Bluetooth Termux-MacBook
+## 🔵 Bluetooth Connection Setup
 
-### ⚠️ Realitas Bluetooth di Termux
-- Termux memiliki keterbatasan akses Bluetooth
-- Android membatasi akses Bluetooth langsung untuk apps
-- Bluetooth LE (Low Energy) lebih mudah daripada Classic Bluetooth
+### ⚙️ Prerequisites
+- Python 3.7+
+- Bluetooth adapter on both devices
+- Admin/sudo access for Bluetooth operations
 
-### 🛠 Setup Bluetooth di MacBook
+### � Platform Support
+- ✅ **macOS** - Full support
+- ✅ **Windows** - Full support  
+- ✅ **Linux** - Full support
 
-1. **Pastikan Bluetooth aktif:**
-   ```bash
-   # Cek status Bluetooth
-   system_profiler SPBluetoothDataType
-   
-   # Atau di System Preferences > Bluetooth
+## 🛠 Step 1: Install Dependencies
+
+### macOS:
+```bash
+# Install Bluetooth libraries
+pip install bleak
+
+# Check Bluetooth status
+system_profiler SPBluetoothDataType | grep "State"
+```
+
+### Windows:
+```bash
+# Install dependencies
+pip install bleak
+
+# Check Bluetooth in Device Manager
+# Control Panel > Device Manager > Bluetooth
+```
+
+### Linux:
+```bash
+# Install Bluetooth tools
+sudo apt install bluetooth bluez-utils
+
+# Install Python libraries
+pip install bleak pybluez
+
+# Check Bluetooth service
+sudo systemctl status bluetooth
+```
+
+## 🔍 Step 2: Find Your Device ID
+
+### Method 1: Using Built-in Tools
+
+**macOS:**
+```bash
+# List Bluetooth devices
+system_profiler SPBluetoothDataType
+
+# Get your Mac's Bluetooth address
+system_profiler SPBluetoothDataType | grep "Address"
+```
+
+**Windows:**
+```bash
+# PowerShell command
+Get-PnpDevice -Class Bluetooth
+
+# Or check in Settings > Devices > Bluetooth
+```
+
+**Linux:**
+```bash
+# List Bluetooth adapters
+hciconfig
+
+# Scan for devices
+hcitool scan
+
+# Get local device info
+bluetoothctl show
+```
+
+### Method 2: Using Our Detection Script
+
+```bash
+# Run device detection
+python detect_bluetooth.py
+
+# Output example:
+# Local Device: MacBook-Pro (XX:XX:XX:XX:XX:XX)
+# Available devices:
+# 1. Windows-PC (YY:YY:YY:YY:YY:YY)
+# 2. Linux-Laptop (ZZ:ZZ:ZZ:ZZ:ZZ:ZZ)
+```
+
+## 🚀 Step 3: Establish Connection
+
+### Device 1 (Server):
+```bash
+# Start Bluetooth server
+python src/main.py server bt
+
+# Output:
+# [SERVER] Bluetooth address: XX:XX:XX:XX:XX:XX
+# [SERVER] Device name: MacBook-Pro
+# [SERVER] Waiting for connection...
+```
+
+### Device 2 (Client):
+```bash
+# Start Bluetooth client
+python src/main.py client bt
+
+# Interactive selection:
+# Found 3 devices:
+# 1. MacBook-Pro (XX:XX:XX:XX:XX:XX) [Server ready]
+# 2. iPhone (YY:YY:YY:YY:YY:YY)
+# 3. Windows-PC (ZZ:ZZ:ZZ:ZZ:ZZ:ZZ)
+# Select device number: 1
+```
+
+## 🔧 Step 4: Troubleshooting Connection Issues
+
+### Problem: "No devices found"
+
+**Solution:**
+```bash
+# Make sure Bluetooth is discoverable
+# macOS: System Preferences > Bluetooth > Advanced > Discoverable
+# Windows: Settings > Devices > Bluetooth > More options > Allow discovery
+# Linux: bluetoothctl discoverable on
+```
+
+### Problem: "Connection refused"
+
+**Solution:**
+```bash
+# Pair devices first manually
+# macOS: System Preferences > Bluetooth > Pair
+# Windows: Settings > Devices > Add Bluetooth device
+# Linux: bluetoothctl pair XX:XX:XX:XX:XX:XX
+```
+
+### Problem: "Device ID not recognized"
+
+**Solution:**
+```bash
+# Use our improved detection script
+python bluetooth_helper.py --scan
+python bluetooth_helper.py --info
+```
+
+## 💡 Universal Connection Tips
+
+### 1. Enable Discoverability
+- **macOS:** System Preferences > Bluetooth > Advanced
+- **Windows:** Settings > Devices > Bluetooth & other devices
+- **Linux:** `bluetoothctl discoverable on`
+
+### 2. Check Bluetooth Services
+- **macOS:** Built-in, always running
+- **Windows:** Services.msc > Bluetooth Support Service
+- **Linux:** `sudo systemctl start bluetooth`
+
+### 3. Firewall Settings
+- Allow Python through firewall
+- Open Bluetooth ports (typically 1-30)
+
+## 🎯 Example Session
+
+### Computer A (Server):
+```bash
+$ python src/main.py server bt
+[SERVER] Local device: Computer-A (12:34:56:78:9A:BC)
+[SERVER] Starting Bluetooth server...
+[SERVER] Listening for connections...
+[SERVER] Connection from Computer-B (DE:F0:12:34:56:78)
+> Hello from Computer A!
+```
+
+### Computer B (Client):
+```bash
+$ python src/main.py client bt
+Scanning for devices...
+Found 2 devices:
+1. Computer-A (12:34:56:78:9A:BC) [Chat Server]
+2. Smartphone (AB:CD:EF:12:34:56)
+Select device: 1
+Connected to Computer-A!
+[SERVER]: Hello from Computer A!
+> Hello from Computer B!
+```
+
+## 📁 File Transfer
+
+```bash
+# Send file
+> /send document.pdf
+[FILE] Sent: document.pdf (1.2 MB)
+
+# Receive notification
+[FILE] Receiving: document.pdf (1.2 MB)
+[FILE] Saved as: received_document.pdf
+```
+
+## 🔄 Fallback to WiFi
+
+If Bluetooth fails, use WiFi mode:
+
+```bash
+# Device 1 (Server)
+python src/main.py server wifi
+
+# Device 2 (Client)  
+python src/main.py client wifi
+# Enter server IP when prompted
+```
    ```
 
 2. **Make MacBook discoverable:**
