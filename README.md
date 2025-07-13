@@ -10,10 +10,31 @@ Aplikasi chat terminal yang mendukung komunikasi dan transfer file melalui **WiF
 - ✅ **Tanpa setup kompleks**
 
 ## 📱 Platform yang Didukung
-- macOS
-- Windows  
-- Linux
-- Android (via Termux)
+- ✅ **macOS**
+- ✅ **Windows**  
+- ✅ **Linux**
+- ✅ **Android (via Termux)** ⭐
+
+## 🤖 Khusus untuk Termux Android
+
+### Quick Setup Termux:
+```bash
+# Install Termux dari F-Droid (bukan Google Play!)
+# Jalankan di Termux:
+pkg update && pkg install python git
+git clone <repository_url>
+cd TerminalChatBluetooth
+pip install -r requirements.txt
+
+# Gunakan script khusus Termux:
+python src/termux_chat.py server wifi
+```
+
+### 💡 Tips Termux:
+- **File access:** Jalankan `termux-setup-storage` untuk akses file
+- **IP Address:** Gunakan `ifconfig` untuk cek IP
+- **Recommended:** Gunakan mode WiFi (lebih stabil di Android)
+- **File location:** File tersimpan di `~/received_<filename>`
 
 ## 🛠 Instalasi
 
@@ -53,16 +74,25 @@ python src/main.py client wifi
 
 **⚠️ Pastikan Bluetooth aktif di kedua perangkat**
 
-**Terminal 1 (Server):**
+#### 🔵 Termux Android ↔ MacBook:
+**MacBook (Server):**
 ```bash
 python src/main.py server bt
 ```
 
-**Terminal 2 (Client):**
+**Termux Android (Client):**
 ```bash
-python src/main.py client bt
-# Pilih device dari daftar yang muncul
+python src/termux_chat.py client bt
+# Pilih MacBook dari daftar scan
 ```
+
+#### 🔧 Setup Requirements:
+- **Android:** Location Services ON, Bluetooth permission untuk Termux
+- **MacBook:** Bluetooth ON, set discoverable
+- **Jarak:** Dalam 10 meter
+- **Fallback:** Gunakan WiFi jika Bluetooth gagal
+
+📖 **Panduan lengkap:** `STEP_BY_STEP_BLUETOOTH.md`
 
 ## 📡 Koneksi Antar Perangkat Berbeda
 
