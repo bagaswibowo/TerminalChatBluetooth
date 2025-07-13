@@ -1,0 +1,26 @@
+{
+    "bluetooth": {
+        "port": 1,
+        "scan_duration": 8,
+        "auto_accept_files": true,
+        "max_file_size_mb": 50
+    },
+    "tcp_fallback": {
+        "host": "localhost",
+        "port": 8888
+    },
+    "ui": {
+        "use_colors": true,
+        "show_timestamps": true,
+        "max_history_lines": 100
+    },
+    "file_transfer": {
+        "chunk_size": 1024,
+        "downloads_dir": "~/Downloads/BluetoothChat",
+        "show_progress": true
+    },
+    "security": {
+        "require_pairing": false,
+        "log_connections": true
+    }
+}
