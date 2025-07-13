@@ -1,4 +1,5 @@
-pybluez==0.23
-colorama==0.4.6
-tqdm==4.66.1
-argparse
+textual
+pybluez; platform_system != "Windows"
+pybluez-win10; platform_system == "Windows"
+pyobjc-core; platform_system == "Darwin"
+pyobjc-framework-CoreBluetooth; platform_system == "Darwin"

@@ -1,197 +1,81 @@
-# Terminal Chat Bluetooth
+# Terminal Chat over Bluetooth
 
-Aplikasi chat terminal lintas platform yang menggunakan koneksi Bluetooth untuk komunikasi offline dan transfer file. Mendukung macOS, Windows, Linux, dan Termux (Android).
+A simple terminal-based chat application that works over Bluetooth, allowing for offline communication and file transfer between various devices.
 
-## Fitur
+## Features
 
-- ✅ Chat real-time melalui Bluetooth
-- ✅ Transfer file dengan progress indicator
-- ✅ Cross-platform (macOS, Windows, Linux, Termux)
-- ✅ Interface terminal yang mudah digunakan
-- ✅ Riwayat chat
-- ✅ Koneksi offline (tidak perlu internet)
-- ✅ Auto-detection perangkat Bluetooth
-- ✅ Colored output untuk pengalaman yang lebih baik
+-   Cross-platform: Works on macOS, Windows, and Linux. Also supports Termux on Android.
+-   Offline communication via Bluetooth.
+-   Send and receive any type of file.
+-   Simple terminal user interface.
 
-## Persyaratan Sistem
+## Prerequisites
 
-### Semua Platform
-- Python 3.6 atau lebih baru
-- Bluetooth adapter yang aktif
-- Perangkat yang ingin dihubungkan harus dalam jangkauan Bluetooth
+-   Python 3.7+
+-   Bluetooth adapter on your device.
 
-### macOS
-- macOS 10.12 atau lebih baru
-- Xcode Command Line Tools (untuk kompilasi dependencies)
-- Homebrew (opsional, untuk instalasi yang lebih mudah)
+## Setup
 
-### Windows
-- Windows 10 atau lebih baru
-- Microsoft Visual C++ Build Tools (untuk kompilasi pybluez)
-- Atau pre-compiled wheel pybluez
+1.  **Clone the repository:**
+    ```bash
+    git clone <repository_url>
+    cd TerminalChatBluetooth
+    ```
 
-### Linux
-- Ubuntu/Debian: `python3-dev`, `libbluetooth-dev`, `pkg-config`
-- CentOS/RHEL: `python3-devel`, `bluez-libs-devel`, `pkgconfig`
-- Arch: `python`, `bluez-libs`, `pkg-config`
+2.  **Create a virtual environment:**
+    ```bash
+    python3 -m venv venv
+    source venv/bin/activate
+    # On Windows, use: venv\Scripts\activate
+    ```
 
-### Termux (Android)
-- Android 7.0 atau lebih baru
-- Termux app dari F-Droid
-- Izin lokasi untuk scanning Bluetooth
-- Storage permission untuk transfer file
+3.  **Install dependencies:**
+    ```bash
+    pip install -r requirements.txt
+    ```
 
-## Instalasi
+## Usage
 
-### macOS & Linux
+The application has two modes: `server` and `client`. One device must act as the server, and the other as the client.
+
+### Server Mode
+
+To start the chat server, run the following command:
+
 ```bash
-chmod +x install.sh
-./install.sh
+python src/main.py server
 ```
 
-### Windows
-```cmd
-install.bat
-```
+The server will start and wait for a client to connect.
 
-### Termux (Android)
-```bash
-chmod +x install_termux.sh
-./install_termux.sh
-```
+### Client Mode
 
-### Manual Installation
-```bash
-pip install -r requirements.txt
-```
+1.  To start the chat client, run the following command:
+    ```bash
+    python src/main.py client
+    ```
 
-## Cara Penggunaan
+2.  The client will scan for nearby Bluetooth devices and present a list.
 
-### Menjalankan Aplikasi
-```bash
-python3 bluetooth_chat.py
-```
+3.  Select a device from the list by entering its number to establish a connection.
 
-### Menu Utama
-1. **Start server** - Mulai server dan tunggu koneksi dari perangkat lain
-2. **Connect to device** - Scan dan hubungkan ke perangkat lain
-3. **Scan for devices** - Lihat perangkat Bluetooth yang tersedia
-4. **Exit** - Keluar dari aplikasi
+### Chatting
 
-### Perintah Chat
-- `/file <path>` - Kirim file
-- `/history` - Tampilkan riwayat chat
-- `/quit` - Keluar dari chat
-- `/help` - Tampilkan bantuan
+-   Simply type your message and press `Enter` to send.
+-   Received messages will be displayed in the terminal.
 
-### Contoh Penggunaan
+### Sending Files
 
-#### Scenario 1: Dua laptop terhubung
-**Laptop A (Server):**
-```bash
-python3 bluetooth_chat.py
-# Pilih "1. Start server"
-# Tunggu koneksi dari Laptop B
-```
+-   To send a file, use the `/send` command followed by the file path:
+    ```
+    > /send /path/to/your/file.jpg
+    ```
+-   You will see a confirmation once the file is sent. The receiver will see a message indicating that a file is being received.
 
-**Laptop B (Client):**
-```bash
-python3 bluetooth_chat.py
-# Pilih "2. Connect to device"
-# Pilih alamat Bluetooth Laptop A
-```
+### Quitting
 
-#### Scenario 2: Android dan Laptop
-**Android (Termux - Server):**
-```bash
-python bluetooth_chat.py
-# Pilih "1. Start server"
-```
+-   To quit the chat, type `/quit` and press `Enter`.
 
-**Laptop (Client):**
-```bash
-python3 bluetooth_chat.py
-# Pilih "2. Connect to device"
-# Pilih alamat Bluetooth Android
-```
+## How It Works
 
-## Transfer File
-
-### Mengirim File
-```
-/file /path/to/your/file.txt
-```
-
-### Lokasi Download
-File yang diterima akan disimpan di:
-- **macOS/Linux**: `~/Downloads/BluetoothChat/`
-- **Windows**: `%USERPROFILE%\Downloads\BluetoothChat\`
-- **Termux**: `~/Downloads/BluetoothChat/`
-
-## Troubleshooting
-
-### Error: "Bluetooth not available"
-- Pastikan PyBluez terinstall dengan benar
-- Di Linux, coba jalankan dengan `sudo`
-- Di Windows, pastikan Visual C++ Build Tools terinstall
-
-### Error: "Permission denied"
-- **Linux**: Jalankan dengan `sudo` atau tambahkan user ke grup `bluetooth`
-- **Android**: Berikan izin lokasi ke Termux
-- **macOS**: Izinkan akses Bluetooth di System Preferences
-
-### Error: "Device not found"
-- Pastikan Bluetooth aktif di kedua perangkat
-- Pastikan perangkat dalam jangkauan (< 10 meter)
-- Coba scan ulang perangkat
-
-### Koneksi terputus
-- Periksa jarak antar perangkat
-- Pastikan tidak ada interferensi
-- Restart Bluetooth jika perlu
-
-## Keamanan
-
-- Koneksi Bluetooth menggunakan enkripsi bawaan
-- File transfer menggunakan encoding base64
-- Tidak ada data yang disimpan di server eksternal
-- Semua komunikasi bersifat peer-to-peer
-
-## Limitasi
-
-- Jangkauan terbatas pada range Bluetooth (biasanya ~10 meter)
-- Kecepatan transfer file terbatas pada bandwidth Bluetooth
-- Beberapa firewall atau antivirus mungkin memblokir koneksi Bluetooth
-- Android 6+ memerlukan izin lokasi untuk scanning Bluetooth
-
-## Kontribusi
-
-Silakan buat issue atau pull request untuk perbaikan dan fitur baru.
-
-## Lisensi
-
-MIT License
-
-## Tips
-
-1. **Pairing**: Untuk koneksi yang lebih stabil, pair perangkat terlebih dahulu melalui pengaturan sistem
-2. **Performance**: Transfer file kecil (<10MB) bekerja paling optimal
-3. **Debugging**: Gunakan mode verbose dengan mengatur environment variable `DEBUG=1`
-4. **Battery**: Koneksi Bluetooth yang aktif akan menggunakan baterai, terutama di mobile device
-
-## FAQ
-
-**Q: Apakah bisa digunakan tanpa internet?**
-A: Ya, aplikasi ini sepenuhnya offline dan hanya menggunakan Bluetooth.
-
-**Q: Berapa banyak perangkat yang bisa terhubung?**
-A: Saat ini mendukung koneksi peer-to-peer (1-to-1).
-
-**Q: Apakah file yang dikirim aman?**
-A: Ya, menggunakan enkripsi Bluetooth standar dan tidak melewati server eksternal.
-
-**Q: Kenapa scanning device lambat?**
-A: Scanning Bluetooth membutuhkan waktu 8-10 detik untuk mendapatkan hasil yang lengkap.
-
-**Q: Bisa kirim file berukuran besar?**
-A: Secara teknis bisa, tapi disarankan file < 50MB untuk performa optimal.
+The application uses the `PyBluez` library for Bluetooth communication. It sets up an RFCOMM socket for communication between the server and the client. The terminal user interface is built using Python's `asyncio` library to handle user input and network communication concurrently. File transfer is handled by sending a header with file information, followed by the file data in chunks.
