@@ -1,5 +1,0 @@
-Ini adalah file test untuk menguji transfer file di aplikasi chat terminal.
-
-File ini berisi teks sederhana yang bisa digunakan untuk testing fitur /send.
-
-Tanggal: 13 Juli 2025

@@ -1,7 +1,1 @@
-# Dependencies untuk Terminal Chat Application
-# Compatible dengan Windows, macOS, Linux, dan Termux Android
-
-bleak>=1.0.0
-
-# Optional: Untuk platform yang tidak support bleak
-# Aplikasi akan fallback ke WiFi mode jika Bluetooth tidak tersedia
+pybluez==0.23

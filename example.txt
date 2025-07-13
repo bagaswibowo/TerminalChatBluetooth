@@ -1,0 +1,10 @@
+Ini adalah contoh file teks untuk dikirim melalui Bluetooth RFCOMM.
+
+File ini akan dikirim dari client ke server menggunakan PyBluez.
+
+Konten file ini akan disimpan di server sebagai "received_file.dat".
+
+Tanggal: 13 Juli 2025
+Test Bluetooth file transfer berhasil!
+
+=== END OF FILE ===

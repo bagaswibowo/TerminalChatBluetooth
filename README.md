@@ -1,190 +1,194 @@
-# Terminal Chat Application
+# Terminal Chat Bluetooth
 
-Aplikasi chat terminal yang mendukung komunikasi dan transfer file melalui **WiFi** atau **Bluetooth**.
+Aplikasi Python minimal untuk komunikasi chat dua arah dan transfer file antar laptop menggunakan Bluetooth RFCOMM dengan PyBluez.
 
-## 🚀 Fitur
-- ✅ **Chat real-time** antar perangkat
-- ✅ **Transfer file** dengan perintah `/send`
-- ✅ **Dua mode koneksi**: WiFi dan Bluetooth
-- ✅ **Cross-platform**: macOS, Windows, Linux, Android (Termux)
-- ✅ **Tanpa setup kompleks**
+## Fitur
+- Chat dua arah melalui Bluetooth RFCOMM
+- Transfer file antar perangkat
+- Mendukung Linux dan Windows
+- Interface terminal sederhana tanpa GUI
 
-## 📱 Platform yang Didukung
-- ✅ **macOS**
-- ✅ **Windows**  
-- ✅ **Linux**
-- ✅ **Android (via Termux)** ⭐
+## Requirements
+- Python 3.x
+- PyBluez library
+- Bluetooth adapter yang mendukung RFCOMM
 
-## 🤖 Khusus untuk Termux Android
+## Instalasi
 
-### Quick Setup Termux:
+### 1. Install Dependencies
 ```bash
-# Install Termux dari F-Droid (bukan Google Play!)
-# Jalankan di Termux:
-pkg update && pkg install python git
-git clone <repository_url>
-cd TerminalChatBluetooth
 pip install -r requirements.txt
-
-# Gunakan script khusus Termux:
-python src/termux_chat.py server wifi
 ```
 
-### 💡 Tips Termux:
-- **File access:** Jalankan `termux-setup-storage` untuk akses file
-- **IP Address:** Gunakan `ifconfig` untuk cek IP
-- **Recommended:** Gunakan mode WiFi (lebih stabil di Android)
-- **File location:** File tersimpan di `~/received_<filename>`
-
-## 🛠 Instalasi
-
-1. **Clone repository:**
-   ```bash
-   git clone <repository_url>
-   cd TerminalChatBluetooth
-   ```
-
-2. **Setup virtual environment:**
-   ```bash
-   python3 -m venv venv
-   source venv/bin/activate  # Windows: venv\Scripts\activate
-   ```
-
-3. **Install dependencies:**
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-## 🎯 Cara Menggunakan
-
-### Mode 1: WiFi/TCP (Recommended)
-
-**Terminal 1 (Server):**
+Atau manual:
 ```bash
-python src/main.py server wifi
+pip install pybluez
 ```
 
-**Terminal 2 (Client):**
+### 2. Setup Bluetooth
+
+#### Linux
 ```bash
-python src/main.py client wifi
-# Masukkan IP server dan port (default: localhost:8888)
+# Jalankan script pairing
+chmod +x pair_linux.sh
+./pair_linux.sh
+
+# Atau manual
+sudo systemctl start bluetooth
+sudo hciconfig hci0 up piscan
+bluetoothctl
 ```
 
-### Mode 2: Bluetooth (Universal)
+#### Windows
+```cmd
+REM Jalankan script pairing
+pair_windows.bat
 
-**✅ Mendukung: macOS, Windows, Linux**
+REM Atau manual via Settings > Devices > Bluetooth
+```
 
-#### 🔍 Step 1: Identify Devices
+## Penggunaan
+
+### 1. Jalankan Server (Penerima)
+Di laptop pertama:
 ```bash
-# Cek device info Anda
-python detect_bluetooth.py --info
-
-# Scan devices yang tersedia  
-python detect_bluetooth.py --scan
+python server.py
 ```
 
-#### � Step 2: Start Connection
-**Computer A (Server):**
+Output contoh:
+```
+=== BLUETOOTH RFCOMM SERVER ===
+Pastikan Bluetooth sudah enabled dan discoverable
+
+[SERVER] RFCOMM Server dimulai di port 1
+[SERVER] Menunggu koneksi client...
+[SERVER] Koneksi diterima dari ('XX:XX:XX:XX:XX:XX', 1)
+```
+
+### 2. Jalankan Client (Pengirim)
+Di laptop kedua:
 ```bash
-python src/main.py server bt
-# Output akan menampilkan device name & address
+python client.py
 ```
 
-**Computer B (Client):**
+Output contoh:
+```
+=== BLUETOOTH RFCOMM CLIENT ===
+
+1. Scan untuk mencari server
+2. Connect langsung dengan alamat MAC
+Pilih opsi (1/2): 1
+
+[CLIENT] Scanning Bluetooth devices...
+
+[CLIENT] Perangkat ditemukan:
+1. Laptop-Server - AA:BB:CC:DD:EE:FF
+2. Phone-Device - 11:22:33:44:55:66
+
+Pilih nomor device untuk connect: 1
+[CLIENT] Connecting ke AA:BB:CC:DD:EE:FF:1...
+[CLIENT] Berhasil connect ke AA:BB:CC:DD:EE:FF
+
+=== MENU ===
+1. Kirim pesan chat
+2. Kirim file  
+3. Disconnect
+```
+
+### 3. Test Chat
+Pilih opsi 1 di client:
+```
+Pilih opsi (1-3): 1
+Masukkan pesan: Halo dari client!
+[CLIENT] Server response: ACK: Pesan diterima
+```
+
+Output di server:
+```
+[SERVER] Pesan diterima: CHAT:Halo dari client!
+[CHAT] Halo dari client!
+```
+
+### 4. Test File Transfer
+Pilih opsi 2 di client:
+```
+Pilih opsi (1-3): 2
+Masukkan path file: example.txt
+[CLIENT] Sending file: example.txt (156 bytes)
+[CLIENT] Progress: 100.0%
+[CLIENT] File berhasil dikirim!
+```
+
+Output di server:
+```
+[SERVER] Pesan diterima: FILE:example.txt:156
+[SERVER] Menerima file: example.txt (156 bytes)
+[SERVER] Progress: 100.0%
+[SERVER] File disimpan sebagai: received_file.dat
+```
+
+## Struktur File
+```
+TerminalChatBluetooth/
+├── server.py              # RFCOMM server
+├── client.py              # RFCOMM client
+├── example.txt             # Contoh file untuk transfer
+├── requirements.txt        # Python dependencies
+├── pair_linux.sh          # Script pairing Linux
+├── pair_windows.bat       # Script pairing Windows
+└── README.md              # Dokumentasi ini
+```
+
+## Troubleshooting
+
+### Error: "Import bluetooth could not be resolved"
 ```bash
-python src/main.py client bt
-# Pilih device server dari daftar scan
+# Linux
+sudo apt-get install python3-dev libbluetooth-dev
+pip install pybluez
+
+# Windows
+pip install pybluez-win10
 ```
 
-#### 🔧 Troubleshooting:
-- **No devices found:** Make devices discoverable
-- **Connection failed:** Pair devices manually first  
-- **Permission error:** Grant Bluetooth permissions
-- **Still fails:** Use WiFi mode instead
+### Error: "No Bluetooth adapter found"
+1. Pastikan Bluetooth adapter terpasang dan enabled
+2. Restart Bluetooth service
+3. Coba jalankan sebagai administrator/sudo
 
-📖 **Panduan lengkap:** `BLUETOOTH_CONNECTION_GUIDE.md`
+### Error: "Connection refused"
+1. Pastikan kedua device sudah paired
+2. Cek firewall tidak memblokir koneksi
+3. Restart Bluetooth service di kedua device
 
-## 📡 Koneksi Antar Perangkat Berbeda
+### Error: "Device not found" 
+1. Pastikan device dalam mode discoverable
+2. Coba scan ulang dengan jarak lebih dekat
+3. Hapus pairing lama dan pair ulang
 
-### WiFi Mode:
-1. **Cari IP server:** `ifconfig` (macOS/Linux) atau `ipconfig` (Windows)
-2. **Di client:** masukkan IP tersebut
+## Catatan Teknis
 
-### Bluetooth Mode:
-1. **Pastikan Bluetooth aktif** di kedua perangkat
-2. **Perangkat harus discoverable**
-3. **Client akan scan dan tampilkan daftar perangkat**
+### RFCOMM Protocol
+- Menggunakan port 1 (default)
+- Socket type: RFCOMM (reliable stream)
+- Service UUID: Serial Port Profile
 
-## 💬 Perintah Chat
+### Format Pesan
+- Chat: `CHAT:isi_pesan`
+- File: `FILE:nama_file:ukuran_bytes`
+- Quit: `QUIT`
 
-- **Chat biasa:** Ketik pesan dan tekan Enter
-- **Kirim file:** `/send /path/to/file.txt`
-- **Keluar:** `/quit`
+### File Transfer
+- Chunk size: 4KB untuk optimasi
+- File disimpan sebagai `received_file.dat`
+- Progress indicator real-time
 
-## 📖 Contoh Penggunaan
+## Pengembangan Lebih Lanjut
 
-### WiFi Mode:
-```bash
-# Terminal 1 (MacBook)
-$ python src/main.py server wifi
-[SERVER] Chat server started on localhost:8888
-
-# Terminal 2 (Android Termux)
-$ python src/main.py client wifi
-Server IP: 192.168.1.100
-Server Port: 8888
-Connected to 192.168.1.100:8888
-> Hello from Android!
-```
-
-### Bluetooth Mode:
-```bash
-# Terminal 1 (Server)
-$ python src/main.py server bt
-[SERVER] Starting Bluetooth LE server...
-
-# Terminal 2 (Client)
-$ python src/main.py client bt
-Scanning for Bluetooth devices...
-Found 3 devices:
-1. MacBook Pro (XX:XX:XX:XX:XX:XX)
-2. iPhone (YY:YY:YY:YY:YY:YY)
-Select device number: 1
-Connected to MacBook Pro!
-```
-
-## 🔧 Troubleshooting
-
-### WiFi Mode:
-- **Port sudah digunakan:** Ubah port default (8888)
-- **Tidak bisa connect:** Periksa firewall dan jaringan
-- **Permission denied:** Gunakan port > 1024
-
-### Bluetooth Mode:
-- **"Bluetooth device is turned off":** Aktifkan Bluetooth
-- **Device tidak terdeteksi:** Pastikan discoverable mode aktif
-- **Import error:** Install dependencies: `pip install bleak`
-
-### Platform Specific:
-- **macOS:** Berikan permission Bluetooth ke Terminal
-- **Linux:** Mungkin perlu `sudo` untuk Bluetooth
-- **Windows:** Install Visual C++ Build Tools jika error
-- **Termux:** `pkg install python bluetooth`
-
-## 🔒 Catatan Keamanan
-
-- ⚠️ Komunikasi **tidak terenkripsi**
-- 🔒 Gunakan hanya di jaringan yang dipercaya
-- 📁 File diterima akan disimpan dengan prefix "received_"
-
-## 🎉 Quick Start
-
-**Untuk testing cepat (WiFi):**
-```bash
-# Terminal 1
-python src/main.py server wifi
-
-# Terminal 2  
-python src/main.py client wifi
-# Tekan Enter untuk localhost:8888
-```
+Untuk mengembangkan aplikasi ini, Anda bisa menambahkan:
+- Enkripsi untuk keamanan
+- Multiple client connections
+- GUI dengan tkinter/PyQt
+- Kompresi file sebelum transfer
+- Resume transfer yang terputus
+- Chat history/logging
