@@ -1,5 +1,1 @@
-textual
-pybluez; platform_system != "Windows"
-pybluez-win10; platform_system == "Windows"
-pyobjc-core; platform_system == "Darwin"
-pyobjc-framework-CoreBluetooth; platform_system == "Darwin"
+bleak>=1.0.0
