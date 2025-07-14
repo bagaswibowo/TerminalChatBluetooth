@@ -3,19 +3,15 @@
 # Run script untuk Bluetooth Chat Application
 # Author: Terminal Chat Bluetooth
 
-PYTHON_PATH="/Users/bagaswibowo/Data Code/TerminalChatBluetooth/.venv/bin/python"
+
+PYTHON_PATH="python3"
 
 echo "🚀 Bluetooth Chat Application Launcher"
 echo "======================================="
 echo
 
-# Check if virtual environment Python exists
-if [ ! -f "$PYTHON_PATH" ]; then
-    echo "❌ Virtual environment not found. Please run setup.sh first."
-    exit 1
-fi
 
-echo "✅ Using Python: $PYTHON_PATH"
+echo "✅ Using Python: $PYTHON_PATH (global)"
 echo
 
 # Show menu

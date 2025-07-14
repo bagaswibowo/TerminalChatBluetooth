@@ -35,11 +35,11 @@ pip install -r requirements.txt
 pip install -r requirements.txt
 ```
 
+
 ### Setup Otomatis
 ```bash
 ./setup.sh  # Linux
-# atau
-python setup.py  # Windows
+# Untuk Windows, jalankan manual: pip install -r requirements.txt
 ```
 
 ## Quick Start
@@ -119,17 +119,23 @@ Setelah terhubung, gunakan perintah:
 
 ## File Structure
 
+
 ```
 TerminalChatBluetooth/
-├── main.py              # Launcher utama
-├── server.py            # Server Bluetooth
-├── client.py            # Client Bluetooth  
-├── requirements.txt     # Dependencies
-├── downloads/           # Folder untuk file yang diterima
-└── README.md           # Dokumentasi
+├── main.py           # Launcher utama (menu interaktif)
+├── server.py         # Server Bluetooth
+├── client.py         # Client Bluetooth
+├── requirements.txt  # Dependencies Python
+├── run.sh            # Script launcher Linux
+├── run.bat           # Script launcher Windows
+├── setup.sh          # Setup otomatis Linux
+├── setup.bat         # Setup otomatis Windows
+├── downloads/        # Folder file yang diterima
+└── README.md         # Dokumentasi
 ```
 
 ## Troubleshooting
+
 
 ### Error "Import bluetooth could not be resolved"
 - Pastikan PyBluez sudah terinstall: `pip3 install pybluez`
