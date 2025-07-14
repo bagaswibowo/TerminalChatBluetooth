@@ -1,0 +1,16 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Bluetooth Chat - Demo Server",
+			"type": "shell",
+			"command": "/Users/bagaswibowo/Data Code/TerminalChatBluetooth/.venv/bin/python",
+			"args": [
+				"demo_server.py"
+			],
+			"group": "build",
+			"isBackground": true,
+			"problemMatcher": []
+		}
+	]
+}

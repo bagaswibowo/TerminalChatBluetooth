@@ -1,194 +1,192 @@
-# Terminal Chat Bluetooth
+# Bluetooth Chat Application
 
-Aplikasi Python minimal untuk komunikasi chat dua arah dan transfer file antar laptop menggunakan Bluetooth RFCOMM dengan PyBluez.
+Aplikasi chat dan transfer file menggunakan koneksi Bluetooth yang dapat dijalankan dari terminal.
 
 ## Fitur
-- Chat dua arah melalui Bluetooth RFCOMM
-- Transfer file antar perangkat
-- Mendukung Linux dan Windows
-- Interface terminal sederhana tanpa GUI
+
+- 💬 **Chat Real-time**: Mengirim dan menerima pesan secara real-time melalui Bluetooth
+- 📁 **Transfer File**: Mengirim file apapun (gambar, dokumen, video, dll) melalui Bluetooth
+- 🎨 **Interface Colorful**: Tampilan terminal yang menarik dengan warna-warna
+- 🔍 **Device Discovery**: Otomatis mencari perangkat Bluetooth yang tersedia
+- 🔒 **Koneksi Aman**: Menggunakan protokol RFCOMM Bluetooth
 
 ## Requirements
-- Python 3.x
-- PyBluez library
-- Bluetooth adapter yang mendukung RFCOMM
 
-## Instalasi
+- Python 3.6+
+- Linux atau Windows dengan Bluetooth support
+- PyBluez library untuk akses Bluetooth
+- Perangkat Bluetooth lain untuk testing
 
-### 1. Install Dependencies
+## Installation
+
+### Linux (Ubuntu/Debian)
 ```bash
+# Install system dependencies
+sudo apt-get update
+sudo apt-get install python3-dev libbluetooth-dev
+
+# Install Python dependencies
 pip install -r requirements.txt
 ```
 
-Atau manual:
+### Windows
 ```bash
-pip install pybluez
+# Install Python dependencies
+pip install -r requirements.txt
 ```
 
-### 2. Setup Bluetooth
-
-#### Linux
+### Setup Otomatis
 ```bash
-# Jalankan script pairing
-chmod +x pair_linux.sh
-./pair_linux.sh
-
-# Atau manual
-sudo systemctl start bluetooth
-sudo hciconfig hci0 up piscan
-bluetoothctl
+./setup.sh  # Linux
+# atau
+python setup.py  # Windows
 ```
 
-#### Windows
+## Quick Start
+
+### Linux
+**Terminal 1** - Server:
+```bash
+./run.sh
+# Pilih: 1. Bluetooth Server Mode
+```
+
+**Terminal 2** - Client:
+```bash
+./run.sh
+# Pilih: 2. Bluetooth Client Mode
+```
+
+### Windows
+**Terminal 1** - Server:
 ```cmd
-REM Jalankan script pairing
-pair_windows.bat
-
-REM Atau manual via Settings > Devices > Bluetooth
-```
-
-## Penggunaan
-
-### 1. Jalankan Server (Penerima)
-Di laptop pertama:
-```bash
 python server.py
 ```
 
-Output contoh:
-```
-=== BLUETOOTH RFCOMM SERVER ===
-Pastikan Bluetooth sudah enabled dan discoverable
-
-[SERVER] RFCOMM Server dimulai di port 1
-[SERVER] Menunggu koneksi client...
-[SERVER] Koneksi diterima dari ('XX:XX:XX:XX:XX:XX', 1)
-```
-
-### 2. Jalankan Client (Pengirim)
-Di laptop kedua:
-```bash
+**Terminal 2** - Client:
+```cmd
 python client.py
 ```
 
-Output contoh:
-```
-=== BLUETOOTH RFCOMM CLIENT ===
+## Cara Penggunaan
 
-1. Scan untuk mencari server
-2. Connect langsung dengan alamat MAC
-Pilih opsi (1/2): 1
+### Launcher Script
 
-[CLIENT] Scanning Bluetooth devices...
-
-[CLIENT] Perangkat ditemukan:
-1. Laptop-Server - AA:BB:CC:DD:EE:FF
-2. Phone-Device - 11:22:33:44:55:66
-
-Pilih nomor device untuk connect: 1
-[CLIENT] Connecting ke AA:BB:CC:DD:EE:FF:1...
-[CLIENT] Berhasil connect ke AA:BB:CC:DD:EE:FF
-
-=== MENU ===
-1. Kirim pesan chat
-2. Kirim file  
-3. Disconnect
+Jalankan launcher utama:
+```bash
+./run.sh
 ```
 
-### 3. Test Chat
-Pilih opsi 1 di client:
-```
-Pilih opsi (1-3): 1
-Masukkan pesan: Halo dari client!
-[CLIENT] Server response: ACK: Pesan diterima
-```
+Menu yang tersedia:
+1. **Bluetooth Server Mode** - Server Bluetooth
+2. **Bluetooth Client Mode** - Client Bluetooth  
+3. **Main Launcher** - Menu interaktif
+4. **Exit** - Keluar
 
-Output di server:
-```
-[SERVER] Pesan diterima: CHAT:Halo dari client!
-[CHAT] Halo dari client!
-```
+### Perintah Chat
 
-### 4. Test File Transfer
-Pilih opsi 2 di client:
-```
-Pilih opsi (1-3): 2
-Masukkan path file: example.txt
-[CLIENT] Sending file: example.txt (156 bytes)
-[CLIENT] Progress: 100.0%
-[CLIENT] File berhasil dikirim!
-```
+Setelah terhubung, gunakan perintah:
 
-Output di server:
-```
-[SERVER] Pesan diterima: FILE:example.txt:156
-[SERVER] Menerima file: example.txt (156 bytes)
-[SERVER] Progress: 100.0%
-[SERVER] File disimpan sebagai: received_file.dat
-```
+- **Chat biasa**: Ketik pesan dan tekan Enter
+- **Kirim file**: `/file <path_to_file>`
+  - Contoh: `/file ~/Documents/foto.jpg`
+  - Contoh: `/file ./document.pdf`
+- **Keluar**: `/quit`
 
-## Struktur File
+## Contoh Penggunaan
+
+1. **Setup Server** (Perangkat A):
+   ```bash
+   ./run.sh
+   # Pilih: 1. Bluetooth Server Mode
+   ```
+   
+2. **Setup Client** (Perangkat B):
+   ```bash
+   ./run.sh
+   # Pilih: 2. Bluetooth Client Mode
+   ```
+   
+3. **Chat**:
+   ```
+   Halo, apa kabar?
+   ```
+   
+4. **Transfer file**:
+   ```
+   /file ~/Downloads/presentasi.pptx
+   ```
+
+## File Structure
+
 ```
 TerminalChatBluetooth/
-├── server.py              # RFCOMM server
-├── client.py              # RFCOMM client
-├── example.txt             # Contoh file untuk transfer
-├── requirements.txt        # Python dependencies
-├── pair_linux.sh          # Script pairing Linux
-├── pair_windows.bat       # Script pairing Windows
-└── README.md              # Dokumentasi ini
+├── main.py              # Launcher utama
+├── server.py            # Server Bluetooth
+├── client.py            # Client Bluetooth  
+├── requirements.txt     # Dependencies
+├── downloads/           # Folder untuk file yang diterima
+└── README.md           # Dokumentasi
 ```
 
 ## Troubleshooting
 
-### Error: "Import bluetooth could not be resolved"
+### Error "Import bluetooth could not be resolved"
+- Pastikan PyBluez sudah terinstall: `pip3 install pybluez`
+- Di macOS: `brew install boost-python3` kemudian `pip3 install pybluez`
+
+### Error "No Bluetooth devices found"
+- Pastikan Bluetooth sudah aktif di kedua perangkat
+- Pastikan perangkat dalam mode discoverable
+- Coba restart Bluetooth service
+
+### Error "Permission denied" 
+- Di macOS, berikan permission untuk Terminal mengakses Bluetooth
+- Buka System Preferences > Security & Privacy > Privacy > Bluetooth
+
+### Koneksi terputus terus-menerus
+- Pastikan jarak antar perangkat tidak terlalu jauh (< 10 meter)
+- Hindari interference dari perangkat WiFi lain
+- Restart aplikasi jika perlu
+
+## Supported File Types
+
+Aplikasi ini mendukung transfer file apapun:
+- 📄 Dokumen (PDF, DOC, TXT, dll)
+- 🖼️ Gambar (JPG, PNG, GIF, dll)  
+- 🎵 Audio (MP3, WAV, dll)
+- 🎬 Video (MP4, AVI, dll)
+- 📦 Archive (ZIP, RAR, dll)
+- Dan file lainnya
+
+## Troubleshooting
+
+### Linux
 ```bash
-# Linux
+# Jika PyBluez gagal install
 sudo apt-get install python3-dev libbluetooth-dev
 pip install pybluez
 
-# Windows
-pip install pybluez-win10
+# Jika ada permission error
+sudo usermod -a -G dialout $USER
+# Logout dan login kembali
 ```
 
-### Error: "No Bluetooth adapter found"
-1. Pastikan Bluetooth adapter terpasang dan enabled
-2. Restart Bluetooth service
-3. Coba jalankan sebagai administrator/sudo
+### Windows
+```cmd
+# Jika ada masalah dengan PyBluez
+pip install --upgrade pip
+pip install pybluez
 
-### Error: "Connection refused"
-1. Pastikan kedua device sudah paired
-2. Cek firewall tidak memblokir koneksi
-3. Restart Bluetooth service di kedua device
+# Pastikan Bluetooth driver terinstall
+```
 
-### Error: "Device not found" 
-1. Pastikan device dalam mode discoverable
-2. Coba scan ulang dengan jarak lebih dekat
-3. Hapus pairing lama dan pair ulang
+### Error "No Bluetooth devices found"
+- Pastikan Bluetooth sudah aktif di kedua perangkat
+- Pastikan perangkat dalam mode discoverable
+- Coba restart Bluetooth service
 
-## Catatan Teknis
-
-### RFCOMM Protocol
-- Menggunakan port 1 (default)
-- Socket type: RFCOMM (reliable stream)
-- Service UUID: Serial Port Profile
-
-### Format Pesan
-- Chat: `CHAT:isi_pesan`
-- File: `FILE:nama_file:ukuran_bytes`
-- Quit: `QUIT`
-
-### File Transfer
-- Chunk size: 4KB untuk optimasi
-- File disimpan sebagai `received_file.dat`
-- Progress indicator real-time
-
-## Pengembangan Lebih Lanjut
-
-Untuk mengembangkan aplikasi ini, Anda bisa menambahkan:
-- Enkripsi untuk keamanan
-- Multiple client connections
-- GUI dengan tkinter/PyQt
-- Kompresi file sebelum transfer
-- Resume transfer yang terputus
-- Chat history/logging
+### Koneksi terputus terus-menerus
+- Pastikan jarak antar perangkat tidak terlalu jauh (< 10 meter)
+- Hindari interference dari perangkat WiFi lain
+- Restart aplikasi jika perlu

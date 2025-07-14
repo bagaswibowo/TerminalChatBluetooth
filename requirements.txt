@@ -1,1 +1,2 @@
-pybluez==0.23
+pybluez==0.22
+colorama==0.4.6
